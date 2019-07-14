@@ -17,7 +17,8 @@
     <title>Flask Blog</title>
     {% endif %}
 </head>
-<body>
+<body style="background: url(https://wallpaperplay.com/walls/full/f/9/a/87850.jpg) no-repeat center center fixed; display: -webkit-box;">
+
 <header class="site-header">
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
@@ -33,10 +34,10 @@
                     <li class="nav-item dropdown">
                         {% if 'loggedin' in session %}
                         <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+
                         {% else %}
                         <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink"
-                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            HR Login & Registration Panel
+                           data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Navigate
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                             <a class="dropdown-item" href="{{ url_for('login') }}">Login</a>
@@ -49,8 +50,9 @@
                 <!-- Navbar Right Side -->
 
                 <div class="navbar-nav">
-                    {% if 'loggedin' in session %}
-                    <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                    {% if 'Adminloggedin' in session %}
+                    <a class="nav-item nav-link" href="{{ url_for('adminMenu') }}">Admin Menu</a>
+                    <a class="nav-item nav-link" href="{{ url_for('Adminlogout') }}">Logout</a>
                     {% else %}
                     <a class="nav-item nav-link" href="{{ url_for('Adminlogin') }}">Admin Login</a>
                     {% endif %}
@@ -73,6 +75,8 @@
             {% endwith %}
             {% block content %}{% endblock %}
         </div>
+
+
         <!-- <div class="col-md-4">
             <div class="content-section">
                 <h3>Our Sidebar</h3>
@@ -85,7 +89,7 @@
                 </ul>
                 </p>
             </div> -->
-        </div>
+    </div>
     </div>
 </main>
 

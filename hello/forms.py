@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo
 from flask_wtf.file import FileField, FileAllowed
+from hello.progress import *
 import pypyodbc
 
 
@@ -40,7 +41,16 @@ class CandidateForm(FlaskForm):
 
 
 class SearchForm(FlaskForm):
-    choices = [('Job Id', 'Job Id'), ('Skill', 'Skill'), ('Stages', 'Stages'), ('Notice Period', 'Notice Period')]
-    s = SelectField('Search', choices=choices)
-    e = StringField('Search')
-    submit = SubmitField('Go')
+    selectS = SelectField('Select Skills:', choices=Lookup(skill))
+    selectJ = SelectField('Select Job ID:', choices=Lookup(job))
+    selectN = StringField('Notice Period:')
+    selectR = SelectField('Select Round:', choices=Lookup(result2))
+    selectT = SelectField('Select Status:', choices=Lookup(result3))
+    submit = SubmitField('Select')
+
+
+class ProgessTrack(FlaskForm):
+    selectC = SelectField('Select Candidate:', choices=Lookup(result1))
+    selectR = SelectField('Select Round:', choices=Lookup(result2))
+    selectS = SelectField('Select Status:', choices=Lookup(result3))
+    submit = SubmitField('Select')

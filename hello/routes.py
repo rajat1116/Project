@@ -1,46 +1,17 @@
 # imports
-from flask import render_template, url_for, flash, redirect, request, session
+from flask import render_template, url_for, flash, redirect, request, session, send_file
 from hello import app
-from hello.forms import RegistrationForm, LoginForm, CandidateForm, SearchForm
+from hello.forms import RegistrationForm, LoginForm, CandidateForm, SearchForm, ProgessTrack
 import pypyodbc
 import secrets
 import os
 
 connection = pypyodbc.connect('Driver={SQL Server}; Server=LAPTOP-RUUC0E0L; Database=Users; trusted_connection=yes')
 
-
 @app.route("/")
 @app.route("/home", methods=['GET', 'POST'])
 def home():
-    form = SearchForm()
-    print(form.s.data)
-    result = None
-    if form.validate_on_submit():
-        print(form.s.data)
-        cursor4 = connection.cursor()
-        choice = form.s.data
-        sch = form.s.data
-        if choice == 'Skill':
-            select = ("SELECT candidatename, skill"
-                      "FROM candidatedel"
-                      "WHERE skill = ?")
-            print(choice)
-        elif choice == 'Job Id':
-            select = ("SELECT job_id "
-                      "FROM candidatedel "
-                      "WHERE job_id= ?")
-        else:
-            select = ("SELECT candidatename ,notice "
-                      "FROM candidatedel "
-                      "WHERE notice = ?")
-        cursor4.execute(select, [sch])
-        result = cursor4.fetchone()
-        if not result:
-            flash('No Result Found!', 'danger')
-        else:
-            flash('Filter Applied!', 'success')
-
-    return render_template('Search.html', form=form, result=result)
+    return render_template('home.html')
 
 
 @app.route("/about")
@@ -51,8 +22,27 @@ def about():
 @app.route("/search", methods=['GET', 'POST'])
 def search():
     form = SearchForm()
-    return render_template('Search.html', form=form)
-
+    curs = connection.cursor()
+    selec = ("SELECT job_id, candidatename, email, contact notice, skill, source, cv"
+             "FROM candidatedel ")
+    curs.execute(selec)
+    result = curs.fetchall()
+    if request.method == 'POST':
+        if form.selectN.data == '':
+            form.selectN.data = '%'
+            select = ("SELECT u.email, candidatename, contact, skill, notice, job_id, source  "
+                      "FROM candidate as u INNER JOIN roundTable as t "
+                      "ON u.email=t.email "
+                      "WHERE skill like ? AND notice like ? AND job_id like ? AND " + form.selectR.data + " like ?")
+            values = [form.selectS.data, form.selectN.data, form.selectJ.data, form.selectT.data]
+            print(values)
+            curs.execute(select, values)
+            result = curs.fetchall()
+            if result:
+                flash("Filter Applied", 'success')
+            else:
+                flash("No Record Found", 'danger')
+    return render_template('home.html', form=form, result=result)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -92,10 +82,49 @@ def login():
                 session['username'] = username_form
                 flash('You have been logged in!', 'success')
                 print(results)
-                return redirect(url_for('home'))
+                return redirect(url_for('Hrmenu'))
             else:
                 flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+
+@app.route("/adminmenu", methods=['GET', 'POST'])
+def adminMenu():
+    return render_template('AdminMenu.html')
+
+@app.route("/hrmenu", methods=['GET','POST'])
+def Hrmenu():
+    return render_template('hrmenu.html')
+
+
+@app.route("/rounds", methods=['GET', 'POST'])
+def RoundStat():
+    cursor5 = connection.cursor()
+    cursor5.execute("SELECT email, round1 round2, round3, round4, hr, offer, joined FROM roundTable")
+    result = cursor5.fetchall()
+    connection.commit()
+    return render_template('round.html', title='Round', data=result)
+
+
+@app.route("/candidatetable", methods=['GET', 'POST'])
+def candidatedetails():
+    cursor4 = connection.cursor()
+    cursor4.execute("SELECT job_id, candidatename, email, contact, notice, skill, source, cv FROM candidatedel")
+    result = cursor4.fetchall()
+    connection.commit()
+    return render_template('candidateTable.html', title='Login', data=result)
+
+
+@app.route('/download')
+def download():
+    cus = connection.cursor()
+    select = ("SELECT cv "
+          "FROM candidatedel "
+          "WHERE email= ?")
+    cus.execute(select, [session['username']])
+    result = cus.fetchone()
+    print(result)
+    return send_file("static" + "/profile_pics"+result[7], attachment_filename=result[7])
 
 
 @app.route("/adminlogin", methods=['GET', 'POST'])
@@ -113,11 +142,11 @@ def Adminlogin():
             results = cu.fetchone()
             print(results)
             if username_form and password_form in results:
-                session['loggedin'] = True
+                session['Adminloggedin'] = True
                 session['username'] = username_form
                 flash('You have been logged in!', 'success')
                 print(results)
-                return redirect(url_for('candidateprofile'))
+                return redirect(url_for('adminMenu'))
             else:
                 flash('Login Unsuccessful. Please check username and password', 'danger')
 
@@ -128,6 +157,13 @@ def Adminlogin():
 def logout():
     if 'loggedin' in session:
         session.pop('loggedin', None)
+        session.pop('username', None)
+        return redirect(url_for('login'))
+
+@app.route('/Adminlogout')
+def Adminlogout():
+    if 'Adminloggedin' in session:
+        session.pop('Adminloggedin', None)
         session.pop('username', None)
         return redirect(url_for('login'))
 
@@ -165,3 +201,31 @@ def candidateprofile():
             return redirect(url_for('candidateprofile'))
 
     return render_template('candidate.html', title='Register', form=form)
+
+@app.route('/track', methods=['GET', 'POST'])
+def progresstrack():
+    form = ProgessTrack()
+    if form.validate_on_submit():
+        candidate = form.selectC.data
+        rounds = form.selectR.data
+        status = form.selectS.data
+        con = connection.cursor()
+        # select = ("SELECT email "
+        #           "FROM candidatedel "
+        #           "WHERE email= ?")
+        # con.execute(select, [candidate])
+        # result = con.fetchone()
+        # print(result)
+        insert1 = ("INSERT into roundTable "
+                   "(email) "
+                   "VALUES(?)")
+        print(str(candidate))
+        con.execute(insert1, [str(candidate)])
+        connection.commit()
+        insert2 = ("UPDATE roundTable "
+                   "SET "+rounds+"= ? "
+                   "WHERE email= ?")
+        con.execute(insert2, [str(status), str(candidate)])
+        connection.commit()
+        flash('Success', 'success')
+    return render_template('roundProgress.html', title='Track', form=form)
