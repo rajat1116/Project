@@ -35,7 +35,7 @@ class CandidateForm(FlaskForm):
     skills = StringField('Skills', validators=[DataRequired()])
     source = StringField('Source', validators=[DataRequired()])
     cv = FileField('Upload Resume', validators=[DataRequired(), FileAllowed(['png', 'jpg', 'pdf', 'docx'])])
-    choices = [('1', 'Data Engineer'), ('2', 'UI/UX dev'), ('3', 'Java Dev')]
+    choices = [('Data Engineer', 'Data Engineer'), ('UI/UX dev', 'UI/UX dev'), ('Java', 'Java')]
     jobId = SelectField('Select Job ID', choices=choices)
     submit = SubmitField('Submit')
 

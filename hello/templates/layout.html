@@ -10,11 +10,34 @@
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <style>
+        table {
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
 
+table td, table th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+table tr:nth-child(even){background-color: #f2f2f2;}
+
+table tr:hover {background-color: #ddd;}
+
+table th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: left;
+  background-color: #4CAF50;
+  color: white;
+}
+    </style>
     {% if title %}
-    <title>Flask Blog - {{ title }}</title>
+    <title>ABC - {{ title }}</title>
     {% else %}
-    <title>Flask Blog</title>
+    <title>ABC</title>
     {% endif %}
 </head>
 <body style="background: url(https://wallpaperplay.com/walls/full/f/9/a/87850.jpg) no-repeat center center fixed; display: -webkit-box;">

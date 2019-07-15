@@ -1,29 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container-section">
-    <input type="search" class="light-table-filter" data-table="order-table" placeholder="Filter">
-  <table style="width:100%" border="1px solid black;" class="order-table table" style="width: 100%;
-    height: 100%;
-    table-layout: initial;
-    border: white dashed;">
-      <th>Job ID</th>
-      <th>Candidate Name</th>
-      <th>Email</th>
-      <th>Contact</th>
-      <th>Notice Period (In Months)</th>
-      <th>Skills</th>>
-      <th>Source</th>
-      <th>Download Resume</th>
+     <div style="width: 139%; border: none;
+  border-bottom: 2px solid red;">
+    <input type="search" class="light-table-filter" data-table="order-table" placeholder="Filter" style="margin-left: 400px">
+    </div>
+    <table style="width:100%" border="1px solid black;" class="order-table table" style="background: white">
+      <th style="background-color: #808080;">Job ID</th>
+      <th style="background-color: #808080;">Candidate Name</th>
+      <th style="background-color: #808080;">Email</th>
+      <th style="background-color: #808080;">Contact</th>
+      <th style="background-color: #808080;">Notice Period (In Months)</th>
+      <th style="background-color: #808080;">Skills</th>
+      <th style="background-color: #808080;">Source</th>
+      <th style="background-color: #808080;">Download Resume</th>
 {% for item in data %}
   <tr>
-      <th> {{ item[0] }}  </th>
-      <th> {{ item[7] }}  </th>
-      <th> {{ item[1] }}  </th>
-      <th> {{ item[3] }}  </th>
-      <th> {{ item[4] }}  </th>
-      <th> {{ item[5] }}  </th>
-      <th> {{ item[6] }}  </th>
-      <th> <a href="{{ url_for('download',email = item[1] ) }}"  >{{ item[2] }}  </a></th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[0] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[7] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[1] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[3] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[4] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[5] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[6] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> <a href="{{ url_for('download',email = item[1] ) }}"  >{{ item[2] }}  </a></th>
   </tr>
 {% endfor %}
       </table>

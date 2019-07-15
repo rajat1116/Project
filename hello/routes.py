@@ -23,15 +23,15 @@ def about():
 def search():
     form = SearchForm()
     curs = connection.cursor()
-    selec = ("SELECT job_id, candidatename, email, contact notice, skill, source, cv"
+    selec = ("SELECT candidatedel.job_id, candidatedel.candidatename, candidatedel.email, candidatedel.contact, candidatedel.notice, candidatedel.skill, candidatedel.source, candidatedel.cv "
              "FROM candidatedel ")
     curs.execute(selec)
     result = curs.fetchall()
     if request.method == 'POST':
         if form.selectN.data == '':
             form.selectN.data = '%'
-            select = ("SELECT u.email, candidatename, contact, skill, notice, job_id, source  "
-                      "FROM candidate as u INNER JOIN roundTable as t "
+            select = ("SELECT u.email, candidatename, contact, skill, notice, candidatedel.job_id, source  "
+                      "FROM candidatedel as u INNER JOIN roundTable as t "
                       "ON u.email=t.email "
                       "WHERE skill like ? AND notice like ? AND job_id like ? AND " + form.selectR.data + " like ?")
             values = [form.selectS.data, form.selectN.data, form.selectJ.data, form.selectT.data]
@@ -42,7 +42,7 @@ def search():
                 flash("Filter Applied", 'success')
             else:
                 flash("No Record Found", 'danger')
-    return render_template('home.html', form=form, result=result)
+    return render_template('Search.html', form=form, result=result)
 
 @app.route("/register", methods=['GET', 'POST'])
 def register():
@@ -100,7 +100,7 @@ def Hrmenu():
 @app.route("/rounds", methods=['GET', 'POST'])
 def RoundStat():
     cursor5 = connection.cursor()
-    cursor5.execute("SELECT email, round1 round2, round3, round4, hr, offer, joined FROM roundTable")
+    cursor5.execute("SELECT * FROM roundTable")
     result = cursor5.fetchall()
     connection.commit()
     return render_template('round.html', title='Round', data=result)
@@ -227,5 +227,8 @@ def progresstrack():
                    "WHERE email= ?")
         con.execute(insert2, [str(status), str(candidate)])
         connection.commit()
+        insert3 =("INSERT into roundTable "
+                   "(email) "
+                   "VALUES(?)")
         flash('Success', 'success')
     return render_template('roundProgress.html', title='Track', form=form)

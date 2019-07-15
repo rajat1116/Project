@@ -1,26 +1,29 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="container">
-    <input type="search" class="light-table-filter" data-table="order-table" placeholder="Filter">
+    <div style="width: 100%; border: none;
+  border-bottom: 2px solid red;">
+    <input type="search" class="light-table-filter" data-table="order-table" placeholder="Filter" style="margin-left: 250px">
+    </div>
   <table style="width:100%" border="1px solid black;" class="order-table table">
-      <th> Email </th>
-      <th> Round 1 </th>
-      <th> Round 2 </th>
-      <th> Round 3 </th>
-      <th> Round 4 </th>
-      <th> HR </th>>
-      <th> Offer </th>
-      <th> Joined </th>
+      <th style="background-color: #808080;"> Email </th>
+      <th style="background-color: #808080;"> Round 1 </th>
+      <th style="background-color: #808080;"> Round 2 </th>
+      <th style="background-color: #808080;"> Round 3 </th>
+      <th style="background-color: #808080;"> Round 4 </th>
+      <th style="background-color: #808080;"> HR </th>
+      <th style="background-color: #808080;"> Offer </th>
+      <th style="background-color: #808080;"> Joined </th>
 {% for item in data %}
   <tr>
-      <th> {{ item[0] }}  </th>
-      <th> {{ item[7] }}  </th>
-      <th> {{ item[1] }}  </th>
-      <th> {{ item[3] }}  </th>
-      <th> {{ item[4] }}  </th>
-      <th> {{ item[5] }}  </th>
-      <th> {{ item[6] }}  </th>
-      <th> {{ item[2] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[0] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[1] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[2] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[3] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[4] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[5] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[6] }}  </th>
+      <th style="background-color: #ffffff; color: black;"> {{ item[7] }}  </th>
   </tr>
 {% endfor %}
       </table>
